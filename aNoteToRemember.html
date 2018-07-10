@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Note To Remember</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment-with-locales.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <style>
+   .collapsible:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin-left: 5px;
+  }
+
+.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+  }
+.content {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 50px;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+.author_bio_toggle_wrapper    
+{
+        
+}
+
+#author_bio_wrap 
+{
+    /*margin-top: 0px;  
+    margin-bottom: 30px; 
+    background: gray;
+    width: auto; height: 50px;*/
+}
+
+</style>
+</head>
+<body>
+ 
+<div class="container">
+  <!-- Button to Open the Modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+    Open modal
+  </button>
+ 
+  <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+ 
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Checklist</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="author_bio_toggle_wrapper">
+          <a href="#0" id="author_bio_wrap_toggle" style="margin-left: 17px;  color: #1b1e21;">Show Suggested Items +</a>
+        </div> 
+        <div id="author_bio_wrap" style="display: none;">
+                  <div style="height:50px;" class="modal-body" id=suggested >
+                      <div>
+                        <nav style="background-color: #dee2e6!important;" class="navbar navbar-expand-lg navbar-light bg-light">
+                          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                          </button>
+
+                          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul id = "suggested-items"class="navbar-nav mr-auto">
+                              <li id="Electronics-item" class="nav-item dropdown" style="margin-right: 15px;">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Electronics
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="#">Charger</a>
+                                  <a class="dropdown-item" href="#">Laptop</a>
+                                </div>
+                              </li>
+
+                              <li id="Documents-item" class="nav-item dropdown" style="margin-right: 15px;">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Documents
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="#">Passport</a>
+                                  <a class="dropdown-item" href="#">Aadhar Card</a>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </nav>
+                      </div>
+                  </div>
+
+        </div>
+ 
+        <!-- Modal body -->
+        <div class="modal-body" style="padding-top: 30px;">
+          <input type="text" placeholder="Type here and press enter to add" class="form-control" id="noteAdder">
+          <br/>
+          <div id="takeItems">
+          </div>
+         <div style="overflow-y:scroll;height:150px;">
+          <ul id="todoList">
+          </ul>
+        </div>
+        </div>
+ 
+        <hr>
+        <span class="border-top my-3"></span>
+ 
+        <div class="modal-body">
+          <div id="alreadyDone">
+          </div>
+         <div style="overflow-y:scroll;height:100px;">
+          <ul id="completedList">
+          </ul>
+        </div>
+        </div> 
+ 
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" onclick='sendNotification(message)'>Submit</button>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+ 
+</div>
+ 
+</body>
+<style>
+ul  {
+  list-style: none;
+}
+</style>
+<script type="text/javascript">
+  //Global Variables
+  var clockReference;
+  var flightTime = new Date("August 19, 2018 11:15:30");
+ 
+  var message = {
+                    "BookingCode": "testPNR2",
+                    "Email": "saurabhpahuja007@gmail.com",
+                    "FirstName": "Saurabh Pahuja",
+                    "MessageCol": []
+                }
+   
+  function sendNotification(message) {
+
+  var message = {
+                  "BookingCode": "testPNR2",
+                  "Email": "saurabhpahuja007@gmail.com",
+                  "FirstName": "Saurabh Pahuja",
+                  "MessageCol": []
+                };
+
+  var todoListItems = $("#todoList li");
+  todoListItems.each(function(idx, li) {
+      var ele = todoListItems[idx];
+      var text = ele.querySelector('input[type=text]').value;
+      var startTime = ele.getElementsByClassName('badge')[0].innerText;
+      message.MessageCol.push({
+                                  "Text": text,
+                                  "StartTime": startTime,
+                                  "IsCancellation": "false"
+                              });
+  });
+
+  var completedListItems = $("#completedList li");
+  completedListItems.each(function(idx, li) {
+    var ele = completedListItems[idx];
+    var text = ele.querySelector('input[type=text]').value;
+    var startTime = ele.getElementsByClassName('badge')[0].innerText;
+    message.MessageCol.push({
+                                "Text": text,
+                                "StartTime": startTime,
+                                "IsCancellation": "true"
+                            });
+  });
+
+        
+  $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      url: 'http://localhost:55766/api/Notification',
+      data: formToJSON(message),
+      success: function(data, textStatus, jqXHR){ console.log('success') },
+      error: function(jqXHR, textStatus, errorThrown){ console.log('success'); }
+  });
+  }
+
+  function formToJSON(message) {
+  document.write('<div>Print this after the script tag</div>');
+  return JSON.stringify(message);
+  }
+
+  //Adding tooltip support
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover();
+  });
+ 
+  //Adding event on click of icon
+  var markAsDoneElements = document.getElementsByClassName("mark-as-done");
+  for (var index = 0; index < markAsDoneElements.length; index++) {
+    addDoneEvent(markAsDoneElements[index]);
+  }
+ 
+  var addDoneEvent =  function(button){
+    button.addEventListener('click', markAsDoneTask, false);
+  }
+ 
+  var markAsDoneTask = function(){
+    //document.getElementById('alreadyDone').innerHTML = 'xyz';
+    if(document.getElementById('todoList').getElementsByTagName("LI").length == 1)
+    {
+      document.getElementById("takeItems").innerHTML="";
+    }
+    this.parentNode.querySelector('input[type=checkbox]').click();
+    document.getElementById("alreadyDone").innerHTML="Don't worry about these";
+  };
+ 
+  //Adding event for adding reminder on enter press
+  var noteAdder = document.getElementById("noteAdder");
+  noteAdder.addEventListener("keyup", function(event){
+    event.preventDefault();
+    if (event.keyCode === 13) {
+    // Adds the note to the list of todo
+    if(noteAdder.value.trim()==''){
+      window.alert("Please Input a value");
+    }
+    else{
+     addTask(noteAdder.value);
+    }
+    // Empty the value so as to add another note
+    noteAdder.value = "";
+    }
+  });
+ 
+ 
+  var deleteElements = document.getElementsByClassName("delete-note");
+  var deleteTask = function(){
+    if(document.getElementById('todoList').getElementsByTagName("LI").length == 1)
+    {
+      document.getElementById("takeItems").innerHTML="";
+    }
+    console.log("Delete Task...");
+    var listItem=this.parentNode.parentNode.parentNode;
+    var ul=listItem.parentNode;
+    ul.removeChild(listItem);
+  }
+ 
+  var addTask = function(text){
+    document.getElementById("todoList").prepend(createNewTaskElement(text));
+    document.getElementById("takeItems").innerHTML="Hey there!! Take these items before you go";
+    $('[data-toggle="popover"]').popover();
+  }
+ 
+  //document.getElementById("add").addEventListener('click', addTask, false);
+ 
+  for (var index = 0; index < deleteElements.length; index++) {
+    addDeleteEvent(deleteElements[index]);
+  }
+ 
+  function addDeleteEvent(button) {
+    button.addEventListener('click', deleteTask, false);
+  }
+ 
+  function addCheckedEvent(input) {
+    input.addEventListener('change', function(){
+      var listItem = this.parentNode.parentNode.parentNode.parentNode;
+      var clone = listItem.cloneNode(true);
+      var ul=listItem.parentNode;
+      ul.removeChild(listItem);
+      var content = clone.querySelector("input[type='text']");
+      var markAsDoneButton = clone.querySelector(".mark-as-done");
+      if(this.checked){
+        document.getElementById("completedList").appendChild(clone);
+        content.style = "text-decoration:line-through";
+        content.classList.add("is-valid");
+        content.classList.remove("is-invalid");
+        markAsDoneButton.classList.remove('fa-check');
+        markAsDoneButton.classList.add('fa-chevron-up');
+      }else{
+        if(document.getElementById('todoList').getElementsByTagName("LI").length == 0)
+        {
+          document.getElementById("takeItems").innerHTML="Hey there!! Take these items before you go";
+        }
+        document.getElementById("todoList").appendChild(clone);
+        content.style = "";
+        content.classList.remove("is-valid");
+        content.classList.add("is-invalid");
+        markAsDoneButton.classList.add('fa-check');
+        markAsDoneButton.classList.remove('fa-chevron-up');
+      }
+      var checkbox = clone.querySelector("input[type='checkbox']");
+      var deleteButton = clone.querySelector(".delete-note");
+      var reminderButton = clone.querySelector(".reminder-note");
+ 
+      addDeleteEvent(deleteButton);
+      addCheckedEvent(checkbox);
+      addDoneEvent(markAsDoneButton);
+      addClickEvent(reminderButton);
+      $('[data-toggle="popover"]').popover();
+    });
+  }
+ 
+  function openCalender(button) {
+   
+  }
+ 
+  function setTime(button) {
+      var string = button.innerText;
+      var displayTime = flightTime;
+      switch(string){
+        case "1 Hour Before":
+        displayTime.setHours(displayTime.getHours() - 1);
+        break;
+        case "3 Hours Before":
+        displayTime.setHours(displayTime.getHours() - 3);
+        break;
+        case "6 Hours Before":
+        displayTime.setHours(displayTime.getHours() - 6);
+        break;
+        case "12 Hours Before":
+        displayTime.setHours(displayTime.getHours() - 12);
+        break;
+      }
+      var timeDisplay = clockReference.parentElement.parentElement.getElementsByClassName('badge')[0].innerText = displayTime;
+  }
+ 
+  function addClickEvent(button) {
+    button.addEventListener('click',function(){
+      clockReference = button;
+    });
+  }
+ 
+  //New task list item
+var createNewTaskElement=function(taskString){
+ 
+  var listItem = document.createElement("li");
+  var divParent = document.createElement("div");
+  var divPrepend = document.createElement("div");
+  var divCheckbox = document.createElement("div");
+  var checkbox = document.createElement("input");
+  var content = document.createElement("input");
+ 
+  var divReminderAppend = document.createElement("div");
+  var deleteReminderButton = document.createElement("span");
+ 
+  var divAppend = document.createElement("div");
+  var deleteButton = document.createElement("span");
+ 
+  var divCompleteAppend = document.createElement("div");
+  var markAsDoneButton = document.createElement("span");
+ 
+  var timeDisplay = document.createElement("span");
+ 
+  divParent.className="input-group mb-3";
+  divPrepend.className="input-group-prepend";
+  divCheckbox.className="input-group-text";
+  divCheckbox.setAttribute("style","position:absolute;z-index=-1;right:0;bottom:0");
+  checkbox.type="checkbox";
+  checkbox.style = "z-index:-1"
+  //Adding Tooltip Support
+  divPrepend.title = "Mark As Done"
+  divPrepend.setAttribute('data-toggle','tooltip');
+  divPrepend.setAttribute('data-placement','left');
+ 
+  content.type="text";
+  content.className="form-control is-invalid";
+ 
+  content.value = taskString;
+ 
+  divAppend.className="input-group-append";
+  deleteButton.className="input-group-text delete-note fa fa-times";
+  deleteButton.setAttribute('aria-hidden','true');
+  //deleteButton.innerText = "X";
+ 
+  divReminderAppend.className="input-group-append";
+  deleteReminderButton.className="input-group-text reminder-note fa fa-clock-o";
+  deleteReminderButton.setAttribute('aria-hidden','true');
+  deleteReminderButton.setAttribute("data-toggle","popover");
+  deleteReminderButton.setAttribute("title","Remind Me...");
+  deleteReminderButton.setAttribute("data-content",'<div class="list-group-flush"><button type="button" class="list-group-item list-group-item-action" onclick="setTime(this)">1 Hour Before</button><button type="button" class="list-group-item list-group-item-action" onclick="setTime(this)">3 Hours Before</button><button type="button" class="list-group-item list-group-item-action" onclick="setTime(this)">6 Hours Before</button><button type="button" class="list-group-item list-group-item-action" onclick="setTime(this)">12 Hours Before</button><button type="button" class="list-group-item list-group-item-action pick-date-time" onclick="openCalender(this)">Pick Date & Time</button></div>');
+  deleteReminderButton.setAttribute('data-trigger','focus');
+  deleteReminderButton.setAttribute('tabindex','0');
+  deleteReminderButton.setAttribute('data-placement','left');
+  deleteReminderButton.setAttribute('data-html',true);
+ 
+  divCompleteAppend.className="input-group-append";
+  divCheckbox.className="input-group-text";
+  checkbox.type="checkbox";
+  divCheckbox.setAttribute("style","position:absolute;right:0;bottom:0");
+  markAsDoneButton.className="input-group-text mark-as-done fa fa-check";
+  markAsDoneButton.setAttribute('aria-hidden','true');
+  markAsDoneButton.style = "z-index:99"
+ 
+  timeDisplay.className = "badge badge-secondary";
+  timeDisplay.setAttribute("style","position:absolute;right:0;top:70%;opacity:0.9;z-index:99");
+  timeDisplay.innerText = flightTime;
+ 
+  //divParent.appendChild(divPrepend);
+ 
+  divParent.appendChild(content);
+  divParent.appendChild(divReminderAppend);
+  divParent.appendChild(divAppend);
+  divParent.appendChild(divCompleteAppend);
+  divParent.appendChild(timeDisplay);
+ 
+  divCompleteAppend.appendChild(divCheckbox);
+  divCompleteAppend.appendChild(markAsDoneButton);
+  //divPrepend.appendChild(divCheckbox);
+ 
+  divCheckbox.appendChild(checkbox);
+ 
+  divAppend.appendChild(deleteButton);
+ 
+  divReminderAppend.appendChild(deleteReminderButton);
+ 
+  listItem.appendChild(divParent);
+ 
+  addDeleteEvent(deleteButton);
+  addCheckedEvent(checkbox);
+  addDoneEvent(markAsDoneButton);
+  addClickEvent(deleteReminderButton);
+ 
+  return listItem;
+}
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    } 
+  });
+}
+
+$('.dropdown-item').on('click', function(){
+
+    document.getElementById("todoList").prepend(createNewTaskElement($(this).text()));
+    if(document.getElementById('todoList').getElementsByTagName("LI").length == 0)
+    {
+      document.getElementById("takeItems").innerHTML="Hey there!! Take these items before you go";
+    }
+    $('[data-toggle="popover"]').popover();
+});
+
+jQuery(document).ready(function($)
+{
+  
+  $("#author_bio_wrap_toggle").click(function()
+  {
+    
+    $("#author_bio_wrap").slideToggle( "fast");
+    
+    if ($("#author_bio_wrap_toggle").text() == "Hide Suggested Items -")
+      {     
+        $("#author_bio_wrap_toggle").html("Show Suggested Items +")
+      }
+    else 
+      {   
+        $("#author_bio_wrap_toggle").text("Hide Suggested Items -")
+      }
+    
+  });  
+  
+});
+</script>
+ 
+</html>
